@@ -1,3 +1,4 @@
+#coding:utf-8
 import csv as csv
 import numpy as np
 
@@ -30,5 +31,5 @@ for i in xrange(number_of_classes):
         survival_table[0,i,j]=np.mean(women.astype(np.float))
         survival_table[1,i,j]=np.mean(men.astype(np.float))
 
-survival_table[survival_table!=survival_table]=0
+survival_table[survival_table!=survival_table]=0 #空数组求平均值会出现问题
 print survival_table
