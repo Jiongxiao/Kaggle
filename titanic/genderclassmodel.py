@@ -24,7 +24,7 @@ data = np.array(data)                       # Then convert from a list to an arr
 # So we add a ceiling
 fare_ceiling = 40
 # then modify the data in the Fare column to = 39, if it is greater or equal to the ceiling
-data[ data[0::,9].astype(np.float) >= fare_ceiling, 9 ] = fare_ceiling - 1.0
+data[ data[0::,9].astype(float) >= fare_ceiling, 9 ] = fare_ceiling - 1.0
 
 fare_bracket_size = 10
 number_of_price_brackets = fare_ceiling / fare_bracket_size
@@ -74,7 +74,7 @@ test_file = open('test.csv', 'rb')
 test_file_object = csv.reader(test_file)
 header = test_file_object.next()
 
-# Also open the a new file so I can write to it. 
+# Also open the a new file so I can write to it.
 predictions_file = open("genderclassmodel.csv", "wb")
 predictions_file_object = csv.writer(predictions_file)
 predictions_file_object.writerow(["PassengerId", "Survived"])
