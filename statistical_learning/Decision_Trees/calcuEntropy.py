@@ -8,7 +8,8 @@ def AddBinFare(frame,fare_bracket_size=10, number_of_fares=4):
     frame['BinFare']=((frame.Fare/fare_bracket_size).clip_upper(number_of_fares-1).fillna(3-frame.Pclass).astype(int))
 
 def transfer(frame,number_of_classes):              #clean and fill
-    frame['Gender']=(frame['Sex'].map(lambda x: x=='male')).astype(int)
+    # frame['Gender']=(frame['Sex'].map(lambda x: x=='male')).astype(int) both ok!!!
+    frame['Gender']=(frame[['Sex']].apply(lambda x: x=='male')).astype(int)
     frame['EM']=frame['Embarked'].map({'C':0,'S':1,'Q':2})
     frame['EM']=frame['EM'].fillna(1)
 
@@ -38,11 +39,11 @@ train_dataSet=train_data.values
 #clean data
 
 # to calculate Entropy
-def calcShannonEnt(dataset):
+def calcShannonEnt(dataset,axis):
     numEntries=len(dataset)
     labelCounts={}
     for featVec in dataset:
-        currentLabel=featVec[0]   #It is important to know where the label is.
+        currentLabel=featVec[axis]   #It is important to know where the label is.
         if currentLabel not in labelCounts.keys():
             labelCounts[currentLabel]=0
         labelCounts[currentLabel]+=1
@@ -52,5 +53,5 @@ def calcShannonEnt(dataset):
         shannonEnt-=prob*log(prob,2)
     return shannonEnt
 # dataSet=[[1,1,1],[1,1,1],[1,0,0],[0,1,0],[0,1,0]]
-# print calcShannonEnt(dataSet)   for test
-# print calcShannonEnt(train_dataSet)
+# print calcShannonEnt(dataSet,0)   for test
+# print calcShannonEnt(train_dataSet,0)
