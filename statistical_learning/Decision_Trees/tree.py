@@ -2,6 +2,7 @@
 import calcuEntropy
 import numpy as np
 
+#Reference: Peter Harrington
 
 #format of dataSet
 # array([ 1.(label),  1.,  1.,  0.,  3.,  0.,  0.])
