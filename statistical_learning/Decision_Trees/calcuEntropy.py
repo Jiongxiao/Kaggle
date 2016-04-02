@@ -35,7 +35,12 @@ test_data=pd.read_csv('test.csv',header=0,index_col=[0])
 AddBinFare(train_data,fare_bracket_size=fare_bracket_size,number_of_fares=number_of_fares)
 train_data=transfer(train_data,number_of_classes)
 train_dataSet=train_data.values
+PassengerId=train_data.index.values
+labels=train_data.columns.values
 
+AddBinFare(test_data,fare_bracket_size=fare_bracket_size,number_of_fares=number_of_fares)
+test_data=transfer(test_data,number_of_classes)
+test_dataSet=test_data.values
 #clean data
 
 # to calculate Entropy
