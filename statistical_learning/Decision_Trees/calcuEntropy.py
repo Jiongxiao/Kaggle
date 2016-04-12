@@ -41,6 +41,7 @@ labels=train_data.columns.values
 AddBinFare(test_data,fare_bracket_size=fare_bracket_size,number_of_fares=number_of_fares)
 test_data=transfer(test_data,number_of_classes)
 test_dataSet=test_data.values
+testLabels=test_data.columns.values
 #clean data
 
 # to calculate Entropy
