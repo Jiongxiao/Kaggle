@@ -1,6 +1,8 @@
 #coding: utf-8
 from numpy import *
 import operator
+import matplotlib
+import matplotlib.pyplot as plt
 
 def createDataSet():
     group=array([[1,1.1],[1,1],[0,0],[1,0.1]])
@@ -38,4 +40,51 @@ def file2matrix(filename):
         classLabelVector.append(int(listFromLine[-1]))
         index +=1
     return returnMat,classLabelVector
+
+def autoNorm(dataSet):
+    minVals=dataSet.min(0)
+    maxVals=dataSet.max(0)
+    ranges=maxVals-minVals
+    normDataSet=zeros(shape(dataSet))
+    m=dataSet.shape[0]
+    normDataSet=dataSet-tile(minVals,(m,1))
+    normDataSet=normDataSet/tile(ranges,(m,1))
+    return normDataSet, ranges, minVals
+
+def datingClassTest():
+    hoRatio=0.1
+    datingDataMat,DatingLabels=file2matrix('datingTestSet2.txt')
+    normMat,ranges,minVals=autoNorm(datingDataMat)
+    m=normMat.shape[0]
+    numTestVecs=int(m*hoRatio)
+    errorCont=0
+    for i in range(numTestVecs):
+        classifierResult=classify0(normMat[i,:],normMat[numTestVecs:m,:],\
+        DatingLabels[numTestVecs:m],5)
+        print 'the classifier came back with %d, the real answer is : %d'\
+        % (classifierResult,DatingLabels[i])
+        if (classifierResult != DatingLabels[i]): errorCont+=1
+    print 'the total error rate is: %f' % (errorCont/float(numTestVecs))
+
 datingDataMat,DatingLabels=file2matrix('datingTestSet2.txt')
+normMat, ranges, minVals=autoNorm(datingDataMat)
+#
+#
+# fig=plt.figure()
+# ax=fig.add_subplot(111)
+# ax.scatter(datingDataMat[:,1],datingDataMat[:,0],20*array(DatingLabels),20*array(DatingLabels))
+# plt.show()
+# datingClassTest()
+
+
+def classifyPerson():
+    resultList=['not at all', 'in small doses', 'in large doses']
+    percentTats=float(raw_input('percentage of time spent playing video games?'))
+    ffMiles=float(raw_input('Frequent flier miles earned per year?'))
+    iceCream=float(raw_input('liters of ice cream consumed per year?'))
+    datingDataMat,DatingLabels=file2matrix('datingTestSet2.txt')
+    normMat, ranges, minVals=autoNorm(datingDataMat)
+    inArr=array([ffMiles,percentTats,iceCream])
+    classifierResult=classify0((inArr-minVals)/ranges,normMat,DatingLabels,3)
+    print 'you will probably like this person:', resultList[classifierResult-1]
+classifyPerson()
