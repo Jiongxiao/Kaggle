@@ -9,7 +9,7 @@ def createDataSet():
     labels=['A','A','B','B']
     return group, labels
 
-def classify0(inX, dataSet, labels, k):
+def classify0(inX, dataSet, labels, k): #重点！！核心部分
     dataSetSize=dataSet.shape[0]
     diff=tile(inX,(dataSetSize,1))-dataSet
     sqDiff=diff**2
