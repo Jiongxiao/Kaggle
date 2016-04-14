@@ -3,6 +3,7 @@ from numpy import *
 import operator
 import matplotlib
 import matplotlib.pyplot as plt
+from os import listdir
 
 def createDataSet():
     group=array([[1,1.1],[1,1],[0,0],[1,0.1]])
@@ -76,7 +77,6 @@ normMat, ranges, minVals=autoNorm(datingDataMat)
 # plt.show()
 # datingClassTest()
 
-
 def classifyPerson():
     resultList=['not at all', 'in small doses', 'in large doses']
     percentTats=float(raw_input('percentage of time spent playing video games?'))
@@ -87,4 +87,41 @@ def classifyPerson():
     inArr=array([ffMiles,percentTats,iceCream])
     classifierResult=classify0((inArr-minVals)/ranges,normMat,DatingLabels,3)
     print 'you will probably like this person:', resultList[classifierResult-1]
-classifyPerson()
+# classifyPerson()
+
+def img2vector(filename):
+    returnVect=zeros((1,1024))
+    fr=open(filename)
+    for i in range(32):
+        lineStr=fr.readline()
+        for j in range(32):
+            returnVect[0,32*i+j]=int(lineStr[j])
+    return returnVect
+# filename='digits/trainingDigits/0_100.txt'
+# trainVector=img2vector(filename)
+def handWritingClassTest():
+    hwLabels=[]
+    trainingFileList=listdir('digits/trainingDigits')
+    m=len(trainingFileList)
+    trainingMat=zeros((m,1024))
+    # print trainingFileList
+    for i in range(1,m):#mac 系统下 里面会出现一个名为.Ds_Store 的文件
+        fileName=trainingFileList[i]
+        fileStr=fileName.split('.')[0] #文件名去掉后缀
+        classNum=int(fileStr.split('_')[0])
+        hwLabels.append(classNum)
+        trainingMat[i,:]=img2vector('digits/trainingDigits/%s' % fileName)
+    testFieldList=listdir('digits/testDigits')
+    error=0
+    mTest=len(testFieldList)
+    for i in range(1,mTest):
+        fileName=testFieldList[i]
+        fileStr=fileName.split('.')[0] #文件名去掉后缀
+        classNum=int(fileStr.split('_')[0])
+        testVector=img2vector('digits/testDigits/%s' %fileName)
+        classifierResult=classify0(testVector,trainingMat,hwLabels,3)
+        print 'the classifier came back with: %d, the real answer is : %d' %(classifierResult,classNum)
+        if (classifierResult!= classNum): error+=1
+    print 'the total number of errors is: %d' % error
+    print '\nthe total error rate is %f' %(error/float(mTest-1))
+handWritingClassTest()
