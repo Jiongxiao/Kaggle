@@ -1,3 +1,4 @@
+#coding: utf-8
 from numpy import *
 
 def loadDataSet():
@@ -24,8 +25,30 @@ def setOfWords2Vec(vocabList, inputSet):
         else: print 'the word: %s is not in the vocabulary!' % word
     return returnVec
 
-#test
 
-listPosts,listClass=loadDataSet()
-vocabList=createVocabList(listPosts)
-setOfWords2Vec(vocabList,listPosts[0])
+def trainNBO(trainMatrix, trainCategory):
+    numTrainDocs=len(trainMatrix)
+    numWords=len(trainMatrix[0])
+    pAbusive=sum(trainCategory)/float(numTrainDocs)
+    # p0Num=zeros(numWords)
+    # p1Num=zeros(numWords)
+    p0Num=ones(numWords)
+    p1Num=ones(numWords)
+    p0Denom=2.0;p1Denom=2.0;
+    for i in range(numTrainDocs):
+        if trainCategory[i]==1:
+            p1Num+=trainMatrix[i]
+            p1Denom+=sum(trainMatrix[i])  # 个人觉得这里每个特征应该分开求概率，为嘛要加到一块？
+        else:
+            p0Num+=trainMatrix[i]
+            p0Denom+=sum(trainMatrix[i])
+    p1Vect=p1Num/p1Denom
+    p0Vect=p0Num/p0Denom
+    return p0Vect,p1Vect,pAbusive
+#for test
+listOPosts,listClasses=loadDataSet()
+vocabList=createVocabList(listOPosts)
+trainMatrix=[]
+for inputSet in listOPosts:
+    trainMatrix.append(setOfWords2Vec(vocabList,inputSet))
+p0v,p1v,pAb=trainNBO(trainMatrix,listClasses)
