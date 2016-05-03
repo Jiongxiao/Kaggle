@@ -42,13 +42,31 @@ def trainNBO(trainMatrix, trainCategory):
         else:
             p0Num+=trainMatrix[i]
             p0Denom+=sum(trainMatrix[i])
-    p1Vect=p1Num/p1Denom
-    p0Vect=p0Num/p0Denom
+    p1Vect=log(p1Num/p1Denom)
+    p0Vect=log(p0Num/p0Denom)
     return p0Vect,p1Vect,pAbusive
-#for test
-listOPosts,listClasses=loadDataSet()
-vocabList=createVocabList(listOPosts)
-trainMatrix=[]
-for inputSet in listOPosts:
-    trainMatrix.append(setOfWords2Vec(vocabList,inputSet))
-p0v,p1v,pAb=trainNBO(trainMatrix,listClasses)
+
+
+def classifyNB(vec2Classify,p0v,p1v,pClass1):
+    p1=sum(vec2Classify*p1v)+log(pClass1)
+    p0=sum(vec2Classify*p0v)+log(1-pClass1)
+    if p1>p0:
+        return 1
+    else:
+        return 0
+
+def testingNB():
+    #for test
+    listOPosts,listClasses=loadDataSet()
+    vocabList=createVocabList(listOPosts)
+    trainMatrix=[]
+    for inputSet in listOPosts:
+        trainMatrix.append(setOfWords2Vec(vocabList,inputSet))
+    p0v,p1v,pAb=trainNBO(trainMatrix,listClasses)
+    testEntry=['love','my','dalmation']
+    thisDoc=array(setOfWords2Vec(vocabList,testEntry))
+    print testEntry, 'classified as ', classifyNB(thisDoc,p0v,p1v,pAb)
+    testEntry=['stupid','garbage']
+    thisDoc=array(setOfWords2Vec(vocabList,testEntry))
+    print testEntry, 'classified as ', classifyNB(thisDoc,p0v,p1v,pAb)
+testingNB()
