@@ -1,4 +1,5 @@
 #coding: utf-8
+#reference: Peter
 from numpy import *
 
 def loadDataSet():
@@ -25,6 +26,12 @@ def setOfWords2Vec(vocabList, inputSet):
         else: print 'the word: %s is not in the vocabulary!' % word
     return returnVec
 
+def bagOfWords2Vec(vocabList, inputSet):
+    returnVec=[0]*len(vocabList)
+    for word in inputSet:
+        if word in vocabList:
+            returnVec[vocabList.index(word)]+=1
+    return returnVec
 
 def trainNBO(trainMatrix, trainCategory):
     numTrainDocs=len(trainMatrix)
@@ -63,7 +70,7 @@ def testingNB():
     for inputSet in listOPosts:
         trainMatrix.append(setOfWords2Vec(vocabList,inputSet))
     p0v,p1v,pAb=trainNBO(trainMatrix,listClasses)
-    testEntry=['love','my','dalmation']
+    testEntry=['my','dalmation','stupid','worthless']
     thisDoc=array(setOfWords2Vec(vocabList,testEntry))
     print testEntry, 'classified as ', classifyNB(thisDoc,p0v,p1v,pAb)
     testEntry=['stupid','garbage']
