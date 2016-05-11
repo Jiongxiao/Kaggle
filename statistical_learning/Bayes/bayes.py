@@ -76,4 +76,14 @@ def testingNB():
     testEntry=['stupid','garbage']
     thisDoc=array(setOfWords2Vec(vocabList,testEntry))
     print testEntry, 'classified as ', classifyNB(thisDoc,p0v,p1v,pAb)
-testingNB()
+# testingNB()
+
+def textParse(bigstring):
+    import re
+    listOfTokens=re.split(r'\W*',bigstring)
+    return [tok.lower() for tok in listOfTokens if len(tok)>2]
+
+emailText=open('email/ham/6.txt').read()
+listOfTokens=textParse(emailText)
+print listOfTokens
+
